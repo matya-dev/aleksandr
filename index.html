@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Agent Info</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+        
+        body {
+            background-color: #121212;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            color: #e0e0e0;
+        }
+        
+        /* Анимации */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes typewriter {
+            from {
+                width: 0;
+            }
+            to {
+                width: 100%;
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .container {
+            background-color: #1e1e1e;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            max-width: 500px;
+            width: 100%;
+            animation: slideDown 0.6s ease-out forwards;
+            opacity: 0;
+        }
+        
+        .icon-frame {
+            background-color: #2a2a2a;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 0 auto 20px;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.8s ease-out 0.2s forwards;
+            opacity: 0;
+        }
+        
+        .icon-gif {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 6px;
+            animation: pulse 2s infinite;
+        }
+        
+        .greeting {
+            color: #ffffff;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+            font-weight: 400;
+            text-align: center;
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typewriter 1s steps(20, end) 0.5s forwards;
+            width: 0;
+        }
+        
+        .content-frame {
+            background-color: #2a2a2a;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 15px;
+            animation: fadeIn 1s ease-out 0.8s forwards;
+            opacity: 0;
+        }
+        
+        /* Компактная таблица информации */
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .info-row {
+            border-bottom: 1px solid #3a3a3a;
+            transition: background-color 0.2s;
+        }
+        
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        
+        .info-row:hover {
+            background-color: #333333;
+        }
+        
+        .info-label {
+            padding: 12px 8px;
+            font-size: 0.85rem;
+            color: #a0a0a0;
+            width: 40%;
+            vertical-align: top;
+        }
+        
+        .info-value {
+            padding: 12px 8px;
+            font-size: 0.85rem;
+            color: #ffffff;
+            word-break: break-word;
+            font-family: 'Roboto Mono', 'Courier New', monospace;
+        }
+        
+        .user-agent-row .info-value {
+            font-size: 0.75rem;
+            line-height: 1.4;
+            background-color: #1e1e1e;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 5px;
+            display: block;
+        }
+        
+        /* Бейджи для статусов */
+        .status-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .status-online {
+            background-color: #2e7d32;
+            color: #a5d6a7;
+        }
+        
+        .status-offline {
+            background-color: #c62828;
+            color: #ffabab;
+        }
+        
+        .status-enabled {
+            background-color: #1565c0;
+            color: #90caf9;
+        }
+        
+        .status-disabled {
+            background-color: #6a1b9a;
+            color: #ce93d8;
+        }
+        
+        /* Кнопка копирования */
+        .copy-btn {
+            background-color: #1976d2;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        
+        .copy-btn:hover {
+            background-color: #1565c0;
+            transform: translateY(-1px);
+        }
+        
+        .copy-btn:active {
+            transform: translateY(0);
+        }
+        
+        .copy-btn.copied {
+            background-color: #2e7d32;
+        }
+        
+        /* Футер */
+        .footer {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #666;
+            animation: fadeIn 1s ease-out 1.2s forwards;
+            opacity: 0;
+        }
+        
+        /* Адаптация для телефона */
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+                margin: 10px;
+            }
+            
+            .icon-frame {
+                width: 70px;
+                height: 70px;
+                margin-bottom: 15px;
+            }
+            
+            .greeting {
+                font-size: 1.5rem;
+                margin-bottom: 12px;
+            }
+            
+            .content-frame {
+                padding: 15px;
+            }
+            
+            .info-label {
+                padding: 10px 6px;
+                font-size: 0.8rem;
+                width: 35%;
+            }
+            
+            .info-value {
+                padding: 10px 6px;
+                font-size: 0.8rem;
+            }
+            
+            .user-agent-row .info-value {
+                font-size: 0.7rem;
+                padding: 8px;
+            }
+            
+            .copy-btn {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+            
+            .info-row {
+                display: flex;
+                flex-direction: column;
+                padding: 10px 0;
+            }
+            
+            .info-label, .info-value {
+                width: 100%;
+                padding: 4px 0;
+            }
+            
+            .info-label {
+                color: #888;
+                font-size: 0.75rem;
+            }
+        }
+        
+        /* Для очень маленьких экранов */
+        @media (max-width: 320px) {
+            .container {
+                padding: 12px;
+            }
+            
+            .greeting {
+                font-size: 1.3rem;
+            }
+            
+            .content-frame {
+                padding: 12px;
+            }
+            
+            .copy-btn {
+                font-size: 0.8rem;
+                padding: 10px;
+            }
+        }
+        
+        /* Темная тема улучшения */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #0a0a0a;
+            }
+            
+            .container {
+                background-color: #151515;
+            }
+            
+            .content-frame {
+                background-color: #222222;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Иконка -->
+        <div class="icon-frame">
+            <img src="icon.gif" alt="Icon" class="icon-gif" onerror="showFallbackIcon()">
+        </div>
+        
+        <!-- Приветствие -->
+        <h1 class="greeting">Здравствуйте</h1>
+        <h1 class="greeting">Исправьте двойку</h1>
+        
+        <!-- Компактная информация -->
+        <div class="content-frame">
+            <table class="info-table">
+                <tbody id="infoContent">
+                    <!-- Заполняется JavaScript -->
+                </tbody>
+            </table>
+            
+            <button class="copy-btn" onclick="copyUserAgent()">
+                <span></span>
+                <span id="copyText">self.copyUserAgentData</span>
+            </button>
+        </div>
+        
+        <div class="footer">
+            У меня кстати есть ваш useragent
+        </div>
+    </div>
+
+    <script>
+        // Основные данные браузера
+        function getBrowserInfo() {
+            const ua = navigator.userAgent;
+            let browser = "Неизвестно";
+            let version = "Неизвестно";
+            
+            if (ua.includes("Firefox")) {
+                browser = "Firefox";
+                const match = ua.match(/Firefox\/(\d+\.\d+)/);
+                version = match ? match[1] : "Неизвестно";
+            } else if (ua.includes("Edg")) {
+                browser = "Edge";
+                const match = ua.match(/Edg\/(\d+\.\d+)/);
+                version = match ? match[1] : "Неизвестно";
+            } else if (ua.includes("Chrome") && !ua.includes("Edg")) {
+                browser = "Chrome";
+                const match = ua.match(/Chrome\/(\d+\.\d+)/);
+                version = match ? match[1] : "Неизвестно";
+            } else if (ua.includes("Safari") && !ua.includes("Chrome")) {
+                browser = "Safari";
+                const match = ua.match(/Version\/(\d+\.\d+)/);
+                version = match ? match[1] : "Неизвестно";
+            }
+            
+            return { browser, version };
+        }
+        
+        // Определение ОС
+        function getOS() {
+            const ua = navigator.userAgent;
+            if (ua.includes("Windows")) return "Windows";
+            if (ua.includes("Mac")) return "macOS";
+            if (ua.includes("Linux")) return "Linux";
+            if (ua.includes("Android")) return "Android";
+            if (ua.includes("iOS") || ua.includes("iPhone")) return "iOS";
+            return "Неизвестно";
+        }
+        
+        // Определение типа устройства
+        function getDeviceType() {
+            const ua = navigator.userAgent;
+            const width = window.screen.width;
+            
+            if (ua.includes("Mobile") || width < 768) {
+                return width < 480 ? "Телефон" : "Планшет";
+            }
+            return "Компьютер";
+        }
+        
+        // Создание строки информации
+        function createInfoRow(label, value, isUserAgent = false) {
+            const row = document.createElement('tr');
+            row.className = `info-row ${isUserAgent ? 'user-agent-row' : ''}`;
+            
+            row.innerHTML = `
+                <td class="info-label">${label}</td>
+                <td class="info-value">${value}</td>
+            `;
+            
+            return row;
+        }
+        
+        // Создание статусного бейджа
+        function createStatusBadge(text, type) {
+            return `<span class="status-badge status-${type}">${text}</span>`;
+        }
+        
+        // Отображение информации
+        function displayInfo() {
+            const infoContent = document.getElementById('infoContent');
+            const browserInfo = getBrowserInfo();
+            const os = getOS();
+            const deviceType = getDeviceType();
+            const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+            
+            // Очищаем содержимое
+            infoContent.innerHTML = '';
+            
+            // User Agent (первый и самый важный)
+            infoContent.appendChild(createInfoRow(
+                "User Agent", 
+                navigator.userAgent, 
+                true
+            ));
+            
+            // Браузер
+            infoContent.appendChild(createInfoRow(
+                "Браузер", 
+                `${browserInfo.browser} ${browserInfo.version}`
+            ));
+            
+            // Система
+            infoContent.appendChild(createInfoRow(
+                "Система", 
+                `${os} • ${deviceType}`
+            ));
+            
+            // Язык и платформа
+            infoContent.appendChild(createInfoRow(
+                "Язык / Платформа", 
+                `${navigator.language || '—'} • ${navigator.platform || '—'}`
+            ));
+            
+            // Разрешение экрана
+            infoContent.appendChild(createInfoRow(
+                "Экран", 
+                `${window.screen.width}×${window.screen.height}px`
+            ));
+            
+            // Онлайн статус
+            infoContent.appendChild(createInfoRow(
+                "Сеть", 
+                navigator.onLine ? 
+                createStatusBadge('Онлайн', 'online') : 
+                createStatusBadge('Оффлайн', 'offline')
+            ));
+            
+            // Cookies
+            infoContent.appendChild(createInfoRow(
+                "Cookies", 
+                navigator.cookieEnabled ? 
+                createStatusBadge('Включены', 'enabled') : 
+                createStatusBadge('Выключены', 'disabled')
+            ));
+            
+            // JavaScript (всегда включен если мы здесь)
+            infoContent.appendChild(createInfoRow(
+                "JavaScript", 
+                createStatusBadge('Включён', 'enabled')
+            ));
+            
+            // Пиксельное соотношение
+            infoContent.appendChild(createInfoRow(
+                "Плотность пикселей", 
+                window.devicePixelRatio || 1
+            ));
+        }
+        
+        // Копирование User Agent
+        function copyUserAgent() {
+            const userAgent = navigator.userAgent;
+            const btn = document.querySelector('.copy-btn');
+            const copyText = document.getElementById('copyText');
+            
+            navigator.clipboard.writeText(userAgent).then(() => {
+                // Визуальная обратная связь
+                btn.classList.add('copied');
+                copyText.textContent = 'Скопировано!';
+                
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                    copyText.textContent = 'Скопировать User Agent';
+                }, 2000);
+            }).catch(err => {
+                // Fallback для старых браузеров
+                const textArea = document.createElement('textarea');
+                textArea.value = userAgent;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                btn.classList.add('copied');
+                copyText.textContent = 'Скопировано!';
+                
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                    copyText.textContent = 'Скопировать User Agent';
+                }, 2000);
+            });
+        }
+        
+        // Fallback иконка
+        function showFallbackIcon() {
+            const iconFrame = document.querySelector('.icon-frame');
+            iconFrame.innerHTML = `
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="#4dabf7" stroke-width="2"/>
+                    <circle cx="12" cy="12" r="4" fill="#4dabf7"/>
+                    <path d="M12 2V6" stroke="#4dabf7" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M12 18V22" stroke="#4dabf7" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M2 12H6" stroke="#4dabf7" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M18 12H22" stroke="#4dabf7" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            `;
+        }
+        
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', () => {
+            // Небольшая задержка для анимации
+            setTimeout(displayInfo, 600);
+            
+            // Проверка онлайн статуса при изменении
+            window.addEventListener('online', displayInfo);
+            window.addEventListener('offline', displayInfo);
+            
+            // Обновление при изменении размера окна
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(displayInfo, 200);
+            });
+        });
+        
+        // Скрыть иконку если файл не найден
+        window.addEventListener('load', function() {
+            const img = document.querySelector('.icon-gif');
+            if (img && img.naturalWidth === 0 && img.naturalHeight === 0) {
+                showFallbackIcon();
+            }
+        });
+    </script>
+</body>
+</html>
